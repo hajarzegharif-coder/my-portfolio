@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="portfolio.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <link rel="icon" type="image/jpeg" href="images/logo100.png">
+    <title>Portfolio hajar</title>
+    <style>
+        :root{
+    --bg:           #0f0c29;
+    --accent:       #E36A6A;
+    --accent-soft:  #FFDBFD;
+    --text:         #E36A6A;
+    --gray:         #b5b5b5;
+    --card:         #0f0f0f;
+    --header-bg:    rgba(11,11,11,0.88);
+    --border-red:   rgba(225,6,0,0.35);
+    --sb-bg:        rgba(15,12,41,0.97);
+    --sb-border:    rgba(227,106,106,0.25);
+    --sb-hover:     rgba(227,106,106,0.10);
+    --sb-active:    rgba(227,106,106,0.15);
+    --sb-width:     230px;
+    --sb-collapsed: 64px;
+    --footer-bg:    #0d0d0d;
+}
+
+
+body.light {
+    --bg:           #f0eeff;
+    --accent:       #b03030;
+    --accent-soft:  #e8c0e8;
+    --text:         #3a1a1a;
+    --gray:         #606060;
+    --card:         #ffffff;
+    --header-bg:    rgba(240,238,255,0.92);
+    --border-red:   rgba(176,48,48,0.3);
+    --sb-bg:        rgba(240,238,255,0.98);
+    --sb-border:    rgba(176,48,48,0.2);
+    --sb-hover:     rgba(176,48,48,0.08);
+    --sb-active:    rgba(176,48,48,0.13);
+    --footer-bg:    #dddaf5;
+}
+
+*, *::before, *::after { 
+    margin:0;
+     padding:0;
+      
+    box-sizing:border-box;
+     }
+
+body{
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    display: flex;
+    transition: background-color 0.4s, color 0.4s;
+}
+
+
+.sidebar{
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    width: var(--sb-width);
+    background: var(--sb-bg);
+    border-right: 1px solid var(--sb-border);
+    backdrop-filter: blur(18px);
+    display: flex;
+    flex-direction: column;
+    z-index: 1100;
+    transition: width 0.35s cubic-bezier(0.4,0,0.2,1), background 0.4s, border-color 0.4s;
+    overflow: hidden;
+    box-shadow: 4px 0 30px rgba(227,106,106,0.08);
+}
+
+.sidebar.collapsed{ 
+    width: var(--sb-collapsed);
+ }
+
+
+.sidebar-header{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 14px 18px;
+    border-bottom: 1px solid var(--sb-border);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.sb-logo{
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: var(--bg);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900; font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 18px rgba(227,106,106,0.4);
+    transition: background 0.4s, color 0.4s;
+}
+
+.sb-logo-text{
+    overflow: hidden; white-space: nowrap;
+    transition: opacity 0.2s, width 0.35s;
+    width: 140px;
+}
+.sidebar.collapsed .sb-logo-text{ 
+    opacity:0;
+     width:0;
+      pointer-events:none;
+     }
+
+.sb-logo-text h2{
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px; font-weight: 700;
+    color: var(--text); letter-spacing: 1px;
+    transition: color 0.4s;
+}
+.sb-logo-text p{ font-size:10px; color:var(--gray); letter-spacing:0.5px; transition: color 0.4s; }
+
+.sb-toggle{
+    position: absolute; right: -12px; top: 50%;
+    transform: translateY(-50%);
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--bg); border: 1px solid var(--sb-border);
+    color: var(--gray); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; z-index: 20;
+    transition: background 0.2s, color 0.2s, transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.2s, border-color 0.4s;
+}
+.sb-toggle:hover{ background:var(--accent); color:#fff; box-shadow:0 0 12px rgba(227,106,106,0.6); }
+.sidebar.collapsed .sb-toggle{ transform: translateY(-50%) rotate(180deg); }
+
+
+.sb-nav{
+    flex: 1; padding: 14px 10px;
+    display: flex; flex-direction: column; gap: 4px;
+    overflow: hidden;
+}
+
+.sb-item{
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 10px; border-radius: 10px;
+    color: var(--gray); text-decoration: none;
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+    position: relative; cursor: pointer;
+}
+.sb-item:hover{ background: var(--sb-hover); color: var(--text); }
+.sb-item.active{ background: var(--sb-active); color: var(--text); }
+.sb-item.active::before{
+    content: '';
+    position: absolute; left: 0; top: 20%; height: 60%; width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(227,106,106,0.8);
+}
+.sb-icon{ font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+.sb-item.active .sb-icon{ filter: drop-shadow(0 0 5px rgba(227,106,106,0.8)); }
+
+.sb-label{ overflow:hidden; white-space:nowrap; transition: opacity 0.2s, width 0.35s; }
+.sidebar.collapsed .sb-label{ opacity:0; width:0; pointer-events:none; }
+
+
+.sidebar.collapsed .sb-item::after,
+.sidebar.collapsed .sb-social::after,
+.sidebar.collapsed .sb-theme::after{
+    content: attr(data-label);
+    position: absolute;
+    left: calc(var(--sb-collapsed) + 4px);
+    background: var(--card); color: var(--text);
+    font-size: 12px; padding: 5px 12px; border-radius: 8px;
+    border: 1px solid var(--sb-border);
+    pointer-events: none; opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.18s, transform 0.18s;
+    white-space: nowrap; z-index: 200;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.sidebar.collapsed .sb-item:hover::after,
+.sidebar.collapsed .sb-social:hover::after,
+.sidebar.collapsed .sb-theme:hover::after{
+    opacity:1; transform:translateX(0);
+}
+.sb-bottom{
+    padding: 10px 10px 16px;
+    border-top: 1px solid var(--sb-border);
+    display: flex; flex-direction: column; gap: 2px;
+    flex-shrink: 0;
+}
+
+.sb-social{
+    display: flex; align-items: center; gap: 12px;
+    padding: 9px 10px; border-radius: 10px;
+    color: var(--gray); text-decoration: none;
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+    transition: background 0.2s, color 0.2s; position: relative;
+}
+.sb-social:hover{ background: var(--sb-hover); color: var(--text); }
+.sb-social i{ font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+
+
+.sb-theme{
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 10px;
+    color: var(--gray); cursor: pointer;
+    font-size: 13px; font-weight: 500; white-space: nowrap;
+    transition: background 0.2s, color 0.2s; position: relative;
+    border: none; background: transparent; width: 100%;
+    text-align: left;
+}
+.sb-theme:hover{ background: var(--sb-hover); color: var(--text); }
+.sb-theme i{ font-size:16px; width:20px; text-align:center; flex-shrink:0; }
+
+.theme-label-wrap{
+    display: flex; align-items: center; gap: 8px; flex: 1;
+    overflow: hidden; white-space: nowrap;
+    transition: opacity 0.2s, width 0.35s;
+}
+.sidebar.collapsed .theme-label-wrap{ opacity:0; width:0; pointer-events:none; }
+
+
+.switch{ position:relative; width:36px; height:20px; flex-shrink:0; }
+.switch input{ display:none; }
+.slider{
+    position:absolute; inset:0; border-radius:20px;
+    background: var(--accent); cursor:pointer;
+    transition: background 0.3s;
+}
+.slider::before{
+    content:''; position:absolute;
+    width:14px; height:14px; left:3px; top:3px;
+    border-radius:50%; background:#fff;
+    transition: transform 0.25s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.switch input:checked + .slider::before{ transform: translateX(16px); }
+.switch input:not(:checked) + .slider{ background: var(--sb-hover); border: 1px solid var(--sb-border); }
+
+.page-wrap{
+    margin-left: var(--sb-width);
+    width: calc(100% - var(--sb-width));
+    transition: margin-left 0.35s cubic-bezier(0.4,0,0.2,1), width 0.35s cubic-bezier(0.4,0,0.2,1);
+    min-height: 100vh;
+}
+.page-wrap.shifted{
+    margin-left: var(--sb-collapsed);
+    width: calc(100% - var(--sb-collapsed));
+}
+
+
+header{
+    position: fixed; top: 0;
+    left: var(--sb-width);
+    width: calc(100% - var(--sb-width));
+    z-index: 999;
+    background: var(--header-bg);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(225,6,0,0.25);
+    transition: left 0.35s cubic-bezier(0.4,0,0.2,1), width 0.35s cubic-bezier(0.4,0,0.2,1), background 0.4s;
+}
+header.shifted{
+    left: var(--sb-collapsed);
+    width: calc(100% - var(--sb-collapsed));
+}
+
+.head{
+    height: 80px; padding: 0 60px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+
+.logo h1{ font-family:'Orbitron',sans-serif; font-size:26px; letter-spacing:2px; color: var(--text); transition: color 0.4s; }
+.logo h1 span{ color:var(--accent-soft); text-shadow:0 0 12px rgba(225,6,0,0.7); }
+
+.link-ul{
+    display:flex; gap:26px; padding:12px 30px; border-radius:40px;
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(225,6,0,0.4);
+    backdrop-filter: blur(10px);
+    list-style: none;
+}
+body.light .link-ul{ background: rgba(255,255,255,0.5); border-color: rgba(176,48,48,0.3); }
+
+.link-ul li a{
+    position:relative; text-decoration:none; color:var(--text);
+    font-size:14px; font-weight:500; padding:6px 4px;
+    transition: color 0.3s;
+}
+.link-ul li a::after{
+    content:''; position:absolute; left:50%; bottom:-8px;
+    width:0%; height:2px; background:var(--accent-soft);
+    transform:translateX(-50%); transition:0.3s ease;
+}
+.link-ul li a:hover{ color:var(--accent-soft); }
+.link-ul li a:hover::after{ width:100%; }
+.link-ul li a.active{ color:var(--accent-soft); }
+.link-ul li a.active::after{ width:100%; }
+
+.sco-ul{ display:flex; gap:16px; list-style:none; }
+.sco-ul li a{ color:var(--text); font-size:18px; transition:0.3s ease; }
+.sco-ul li a:hover{ color:var(--accent-soft); text-shadow:0 0 15px rgba(225,6,0,0.9); }
+
+.sco{ display:flex; align-items:center; gap:16px; }
+
+.header-theme-btn{
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(225,6,0,0.4);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.25s, color 0.25s, box-shadow 0.25s, transform 0.25s;
+    flex-shrink: 0;
+}
+.header-theme-btn:hover{
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(225,6,0,0.55);
+    transform: rotate(20deg);
+}
+.header-theme-btn svg{
+    transition: transform 0.4s ease;
+}
+
+
+.main{ margin: 140px 180px; }
+
+.container{ display:flex; align-items:center; justify-content:space-between; gap:100px; }
+
+.hi h1{
+    color:var(--text); font-family:'Orbitron',sans-serif;
+    font-size:48px; letter-spacing:2px; margin-bottom:15px;
+    transition: color 0.4s;
+}
+.main h3{ font-family:'Orbitron',sans-serif; color:var(--accent-soft); font-size:40px; margin-bottom:25px; transition: color 0.4s; }
+.main p{ color:var(--gray); line-height:1.8; max-width:520px; margin-bottom:40px; transition: color 0.4s; }
+
+.btn{ display:flex; gap:20px; }
+.btn a{
+    text-decoration:none; color:var(--text);
+    border:1px solid var(--accent); padding:12px 30px;
+    border-radius:30px; transition:0.3s ease;
+}
+.btn a:first-child{ background:var(--accent); color:#fff; box-shadow:0 0 18px rgba(225,6,0,0.5); }
+.btn a:hover{ background:var(--accent); color:#fff; box-shadow:0 0 20px rgba(225,6,0,0.6); }
+
+.Me{ position:relative; width:380px; height:380px; }
+.Me img{
+    width:280px; border-radius:50%;
+    border:3px solid var(--accent);
+    box-shadow:0 0 40px rgba(225,6,0,0.6);
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); z-index:2;
+}
+.Me img:hover{ animation: float 6s ease-in-out infinite; }
+
+@keyframes float{
+    0%   { transform: translate(-50%,-50%); }
+    50%  { transform: translate(-50%, calc(-50% - 20px)); }
+    100% { transform: translate(-50%,-50%); }
+}
+
+.orbit{
+    position:absolute; width:380px; height:380px;
+    top:50%; left:50%; transform:translate(-50%,-50%);
+    border-radius:50%; animation:spin 18s linear infinite; z-index:1;
+}
+
+.icon{
+    position:absolute; top:50%; left:50%;
+    width:42px; height:42px; background:var(--bg);
+    border:1px solid var(--accent); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px; cursor:pointer; transform-origin:0 0;
+    transition:0.3s ease;
+}
+.icon:hover{ background:var(--accent); box-shadow:0 0 15px var(--accent); }
+
+.html   { transform: rotate(0deg)   translate(190px); }
+.unity  { transform: rotate(51deg)  translate(190px); }
+.java   { transform: rotate(103deg) translate(190px); }
+.C      { transform: rotate(154deg) translate(190px); }
+.figma  { transform: rotate(206deg) translate(190px); }
+.js     { transform: rotate(257deg) translate(190px); }
+.css    { transform: rotate(309deg) translate(190px); }
+
+.html i  { color:#e34f26; }
+.css i   { color:#1572b6; }
+.js i    { color:#f7df1e; }
+.java i  { color:#007396; }
+.unity i { color:#ffffff; }
+.figma i { color:#f24e1e; }
+.C i     { color:#a8b9cc; }
+
+@keyframes spin{
+    from { transform: translate(-50%,-50%) rotate(0deg); }
+    to   { transform: translate(-50%,-50%) rotate(360deg); }
+}
+
+.about{ padding: 120px 80px; }
+
+.section-title{
+    font-family:'Orbitron',sans-serif; font-size:42px;
+    margin-bottom:70px; text-align:center; position:relative;
+    color: var(--text); transition: color 0.4s;
+}
+.section-title::after{
+    content:''; width:70px; height:3px; background:var(--accent);
+    display:block; margin:15px auto 0;
+}
+
+.about-content{
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    flex-wrap: wrap;
+}
+
+.about-img{ flex-shrink: 0; }
+.about-img img{
+    width: 320px;
+    border-radius: 25px;
+    display: block;
+}
+
+.about-main{
+    flex: 1;
+    min-width: 280px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.about-text p{
+    color: var(--gray);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    transition: color 0.4s;
+}
+
+.skils{ display:flex; gap:16px; flex-wrap: wrap; }
+
+.etud, .exp, .soft{
+    border:2px solid var(--accent); border-radius:10px;
+    padding:20px; flex: 1; min-width: 140px;
+    transition: border-color 0.4s;
+}
+.etud h3, .exp h3, .soft h3{
+    font-family:'Orbitron',sans-serif; color:var(--accent-soft);
+    font-size:16px; margin-bottom:10px; transition: color 0.4s;
+}
+.etud p, .exp p, .soft p{ color:var(--gray); line-height:1.6; font-size:13px; transition: color 0.4s; }
+
+
+.projects{ padding: 120px 80px; }
+
+.projects-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:40px; }
+
+.project-card{
+    background:var(--card); border:1px solid var(--border-red);
+    border-radius:18px; overflow:hidden; transition:0.4s ease, background 0.4s, border-color 0.4s;
+}
+.project-card:hover{ transform:translateY(-12px); box-shadow:0 0 35px rgba(225,6,0,0.4); }
+
+.project-image{ height:190px; overflow:hidden; }
+.project-image img{ width:100%; height:100%; object-fit:cover; transition:0.6s ease; }
+.project-card:hover .project-image img{ transform:scale(1.1); }
+
+.project-content{ padding:25px; }
+.project-content h3{ font-size:20px; margin-bottom:12px; color:var(--text); transition: color 0.4s; }
+.project-content p{ font-size:14px; color:var(--gray); line-height:1.6; margin-bottom:18px; }
+
+.project-tech{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:18px; }
+.project-tech span{ font-size:12px; padding:5px 14px; border-radius:20px; border:1px solid var(--accent); color:var(--text); transition: color 0.4s, border-color 0.4s; }
+
+.project-actions{ display:flex; gap:14px; flex-wrap:wrap; }
+.project-actions a{
+    text-decoration:none; font-size:13px; padding:8px 18px;
+    border-radius:20px; display:flex; align-items:center; gap:6px; transition:0.3s ease;
+}
+.btn-demo{ border:1px solid var(--accent); color:var(--text); }
+.btn-demo:hover{ background:var(--accent); color:#fff; box-shadow:0 0 18px rgba(225,6,0,0.5); }
+.btn-github{ border:1px solid #444; color:var(--text); }
+.btn-github:hover{ background:rgba(0,0,0,0.3); }
+
+#contact{ padding: 80px 80px 120px; }
+
+.contact-content{
+    max-width:1100px; margin:auto;
+    display:grid; grid-template-columns:1fr 1fr; gap:80px;
+}
+
+.contact-info p{ color:var(--gray); line-height:1.8; margin-bottom:35px; }
+.contact-details{ margin-bottom:35px; }
+
+.contact-item{ display:flex; align-items:center; gap:15px; margin-bottom:20px; color:var(--text); }
+.contact-item svg{ color:var(--accent); filter:drop-shadow(0 0 6px rgba(225,6,0,0.5)); }
+.contact-item a{ color:var(--text); text-decoration:none; transition: color 0.3s; }
+.contact-item a:hover{ color:var(--accent-soft); }
+
+.social-links{ display:flex; gap:18px; }
+.social-link{
+    width:46px; height:46px; border-radius:50%;
+    border:1px solid var(--accent); display:flex;
+    align-items:center; justify-content:center;
+    color:var(--text); transition:0.3s ease;
+}
+.social-link:hover{ background:var(--accent); color:#fff; box-shadow:0 0 20px rgba(225,6,0,0.6); transform:scale(1.12); }
+
+.contact-form{
+    background:var(--card); border:1px solid var(--border-red);
+    border-radius:18px; padding:35px;
+    box-shadow:0 0 35px rgba(225,6,0,0.15);
+    transition: background 0.4s, border-color 0.4s;
+}
+.form-group{ margin-bottom:22px; }
+.form-group input, .form-group textarea{
+    width:100%; padding:14px 16px; background:transparent;
+    border:1px solid var(--border-red); border-radius:10px;
+    color:var(--text); font-size:14px; font-family:'Poppins',sans-serif;
+    transition:0.3s ease;
+}
+.form-group input::placeholder, .form-group textarea::placeholder{ color:var(--gray); }
+.form-group input:focus, .form-group textarea:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 15px rgba(225,6,0,0.4); }
+.contact-form button{
+    background:var(--accent); color:#fff; border:none;
+    padding:12px 32px; border-radius:30px; cursor:pointer;
+    font-size:14px; font-family:'Poppins',sans-serif; font-weight:600; transition:0.3s ease;
+}
+.contact-form button:hover{ box-shadow:0 0 25px rgba(225,6,0,0.7); transform:translateY(-2px); }
+
+
+.footer{
+    background: var(--footer-bg); color:var(--gray);
+    text-align:center; padding:20px 0; margin-top:60px;
+    transition: background 0.4s, color 0.4s;
+}
+.footer p{ margin-bottom:10px; font-size:14px; }
+.footer-social a{ color:var(--gray); margin:0 10px; font-size:18px; transition:0.3s; text-decoration:none; }
+.footer-social a:hover{ color:var(--accent); text-shadow:0 0 15px rgba(225,6,0,0.6); }
+
+
+@media (max-width: 1024px){
+    .sidebar{ display:none; }
+    .page-wrap{ margin-left:0 !important; width:100% !important; }
+    header{ left:0 !important; width:100% !important; }
+    .head{ flex-direction:column-reverse; gap:14px; }
+    .link-ul, .sco-ul{ display:none; }
+    .main{ margin:100px 30px; }
+    .container{ flex-direction:column-reverse; text-align:center; gap:40px; }
+    .about{ padding:80px 30px; }
+    .about-content{ flex-direction:column; align-items:center; gap:40px; }
+    .about-img img{ width:100%; max-width:400px; }
+    .projects{ padding:80px 30px; }
+    #contact{ padding:60px 30px 80px; }
+    .contact-content{ grid-template-columns:1fr; gap:40px; }
+}
+
+@media (max-width: 600px){
+    .main{ margin:60px 14px 40px; }
+    .container{ flex-direction:column-reverse; align-items:center; gap:34px; }
+    .main p{ font-size:13.5px; max-width:320px; margin:0 auto 28px; }
+    .hi h1{ font-size:32px; }
+    .main h3{ font-size:26px; }
+    .btn{ flex-direction:column; align-items:center; gap:14px; }
+    .btn a{ width:100%; max-width:280px; padding:14px 0; text-align:center; }
+    .Me{ width:200px; height:200px; }
+    .Me img{ width:145px; height:145px; }
+    .orbit{ width:200px; height:200px; animation-duration:32s; }
+    .icon{ width:26px; height:26px; font-size:12px; }
+    .html  { transform:rotate(0deg)   translate(100px); }
+    .unity { transform:rotate(51deg)  translate(100px); }
+    .java  { transform:rotate(103deg) translate(100px); }
+    .C     { transform:rotate(154deg) translate(100px); }
+    .figma { transform:rotate(206deg) translate(100px); }
+    .js    { transform:rotate(257deg) translate(100px); }
+    .css   { transform:rotate(309deg) translate(100px); }
+    .about{ padding:60px 14px; }
+    .skils{ flex-direction:column; }
+    .projects{ padding:60px 14px; }
+    .section-title{ font-size:28px; margin-bottom:44px; }
+    .projects-grid{ grid-template-columns:1fr; gap:22px; }
+    .project-image{ height:150px; }
+    #contact{ padding:40px 14px 60px; }
+    .contact-content{ grid-template-columns:1fr; gap:30px; }
+}
+
+    </style>
+</head>
+<body id="body">
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+        <div class="sb-logo">H</div>
+        <div class="sb-logo-text">
+            <h2>hajar!</h2>
+            <p>Full Stack Dev</p>
+        </div>
+        <button class="sb-toggle" id="sidebarToggle">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+    </div>
+
+    <nav class="sb-nav">
+        <a href="#home" class="sb-item active" data-label="Home">
+            <i class="fa-solid fa-house sb-icon"></i>
+            <span class="sb-label">Home</span>
+        </a>
+        <a href="#about" class="sb-item" data-label="About">
+            <i class="fa-solid fa-user sb-icon"></i>
+            <span class="sb-label">About</span>
+        </a>
+        <a href="#projects" class="sb-item" data-label="Projects">
+            <i class="fa-solid fa-code sb-icon"></i>
+            <span class="sb-label">Projects</span>
+        </a>
+        <a href="#contact" class="sb-item" data-label="Contact">
+            <i class="fa-solid fa-envelope sb-icon"></i>
+            <span class="sb-label">Contact</span>
+        </a>
+    </nav>
+
+    <div class="sb-bottom">
+        <a href="https://github.com/hajarzegharif-coder" class="sb-social" target="_blank" data-label="GitHub">
+            <i class="fa-brands fa-github"></i>
+            <span class="sb-label">GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/hajar-zegharif-7ab6403b3/" class="sb-social" target="_blank" data-label="LinkedIn">
+            <i class="fa-brands fa-linkedin"></i>
+            <span class="sb-label">LinkedIn</span>
+        </a>
+        <a href="https://discord.com/channels/@me" class="sb-social" target="_blank" data-label="Discord">
+            <i class="fa-brands fa-discord"></i>
+            <span class="sb-label">Discord</span>
+        </a>
+
+
+        <button class="sb-theme" id="themeBtn" data-label="Light Mode">
+            <i class="fa-solid fa-sun sb-icon" id="themeIcon"></i>
+            <div class="theme-label-wrap">
+                <span id="themeLabel">Light Mode</span>
+                <label class="switch">
+                    <input type="checkbox" id="themeCheck">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </button>
+    </div>
+</aside>
+
+
+<div class="page-wrap" id="pageWrap">
+
+    <header id="mainHeader">
+        <div class="head">
+            <div class="logo"><h1><span>h</span>ajar!</h1></div>
+            <div class="links">
+                <ul class="link-ul">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="sco">
+                <ul class="sco-ul">
+                    <li><a href="https://github.com/hajarzegharif-coder"><i class="fa-brands fa-github"></i></a></li>
+                    <li><a href="https://www.linkedin.com/in/hajar-zegharif-7ab6403b3/"><i class="fa-brands fa-linkedin"></i></a></li>
+                    <li><a href="https://discord.com/channels/@me"><i class="fa-brands fa-discord"></i></a></li>
+                    <li><a href="https://mail.google.com/mail/?view=cm&fs=1&to=hajarzegharif5@gmail.com"><i class="fa-solid fa-envelope"></i></a></li>
+                </ul>
+                <button class="header-theme-btn" id="headerThemeBtn" title="Toggle theme">
+                    <svg id="headerThemeIcon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <section class="main" id="home">
+        <div class="container">
+            <div class="content">
+                <div class="hi"><h1>Hi, I'm Hajar</h1></div>
+                <h3>Full Stack Developer</h3>
+                <p>I create beautiful, functional, and user-centered digital experiences. With
+                   1 year of experience in web development, I bring ideas to life through
+                   clean code .</p>
+                <div class="btn">
+                    <a href="#fot">More about me</a>
+                    <a href="#contact">Contact Me</a>
+                </div>
+            </div>
+            <div class="Me">
+                <div class="orbit">
+                    <span class="icon html"><i class="fa-brands fa-html5"></i></span>
+                    <span class="icon unity"><i class="fa-brands fa-unity"></i></span>
+                    <span class="icon java"><i class="fa-brands fa-java"></i></span>
+                    <span class="icon C"><i class="fa-solid fa-c"></i></span>
+                    <span class="icon figma"><i class="fa-brands fa-figma"></i></span>
+                    <span class="icon js"><i class="fa-brands fa-js"></i></span>
+                    <span class="icon css"><i class="fa-brands fa-css3"></i></span>
+                </div>
+                <img src="images/photo11.jpg" alt="My Photo">
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <h2 class="section-title">About Me</h2>
+        <div class="about-content">
+            <div class="about-img">
+                <img src="images/photo12.jpg" alt="My Photo">
+            </div>
+            <div class="about-main">
+                <div class="about-text">
+                    <p>Hi! I'm Hajar Zegharif, 20 years old, a passionate and creative full stack developer based in Morocco.</p>
+                    <p>I'm currently a first-year Digital development student, where I've developed a deep interest in programming websites with modern technologies.</p>
+                    <p>I'm particularly focused on front end development, responsive layouts, and interactive user experiences that blend beauty with functionality.</p>
+                </div>
+                <div class="skils">
+                    <div class="etud">
+                        <h3>Education</h3>
+                        <p>2025 - Present</p>
+                        <p>Digital Development</p>
+                    </div>
+                    <div class="exp">
+                        <h3>Experience</h3>
+                        <p>2025 - Present</p>
+                        <p>Full Stack Developer</p>
+                    </div>
+                    <div class="soft">
+                        <h3>Skills</h3>
+                        <p>VS Code, Figma, Git & GitHub, After Effects, Unity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="projects" id="projects">
+        <h2 class="section-title">Projects</h2>
+        <div class="projects-grid">
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/projet101.png" alt="Portfolio"></div>
+                <div class="project-content">
+                    <h3>Portfolio Website</h3>
+                    <p>Modern responsive portfolio with smooth animations and clean UI.</p>
+                    <div class="project-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+                    <div class="project-actions">
+                        <a href="https://cozy-crisp-b269de.netlify.app/" class="btn-demo" target="_blank">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/Game.png" alt="2D Game"></div>
+                <div class="project-content">
+                    <h3>2D Platformer Game</h3>
+                    <p>Pixel-art platformer game built with Unity and C#.</p>
+                    <div class="project-tech"><span>Unity</span><span>C#</span></div>
+                    <div class="project-actions">
+                        <a href="#" class="btn-demo">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/Por2.jpg" alt="To Do"></div>
+                <div class="project-content">
+                    <h3>To Do List</h3>
+                    <p>A To-Do List app to organize tasks with add, edit, delete and priority features.</p>
+                    <div class="project-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+                    <div class="project-actions">
+                        <a href="#" class="btn-demo">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/Task manager app.jpg" alt="Task Manager"></div>
+                <div class="project-content">
+                    <h3>Task Manager</h3>
+                    <p>A task management application to organize and prioritize tasks.</p>
+                    <div class="project-tech"><span>HTML</span><span>CSS</span><span>JS</span></div>
+                    <div class="project-actions">
+                        <a href="#" class="btn-demo">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/Game Dashboard Design.jpg" alt="Game Landing"></div>
+                <div class="project-content">
+                    <h3>Game Landing Page</h3>
+                    <p>Landing page for a game with animations and parallax effects.</p>
+                    <div class="project-tech"><span>HTML</span><span>CSS</span><span>GSAP</span></div>
+                    <div class="project-actions">
+                        <a href="#" class="btn-demo">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-card">
+                <div class="project-image"><img src="images/Cleveroad.jpg" alt="E-Commerce"></div>
+                <div class="project-content">
+                    <h3>E-Commerce Website</h3>
+                    <p>Modern online store with product filtering, cart, and payment system.</p>
+                    <div class="project-tech"><span>HTML</span><span>CSS</span><span>JS</span><span>MySQL</span></div>
+                    <div class="project-actions">
+                        <a href="#" class="btn-demo">Live Demo</a>
+                        <a href="https://github.com/hajarzegharif-coder" class="btn-github" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <h2 class="section-title">Get In Touch</h2>
+    <section id="contact">
+        <div class="container" style="display:block;">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p>Let's collaborate! I am always open to discussing exciting projects and new opportunities.</p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            <span>hajarzegharif5@gmail.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.15 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                            <span>+212 7 21 99 20 61</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                            <span>Morocco, Tit mellil jenan sbit</span>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://github.com/hajarzegharif-coder" class="social-link" target="_blank">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/hajar-zegharif-7ab6403b3/" class="social-link" target="_blank">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://wa.me/213554139526" class="social-link" target="_blank">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.885 3.488"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="contact-form">
+                        <div class="form-group"><input type="text" placeholder="Your Name" required name="user_name"></div>
+                        <div class="form-group"><input type="email" placeholder="Your Email" required name="user_email"></div>
+                        <div class="form-group"><textarea name="message" placeholder="Your Message" rows="5" required></textarea></div>
+                        <button type="submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer" id="fot">
+        <p>© 2026 Hajar. All rights reserved.</p>
+        <div class="footer-social">
+            <a href="https://github.com/hajarzegharif-coder" target="_blank"><i class="fa-brands fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/hajar-zegharif-7ab6403b3/" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+            <a href="https://discord.com/channels/@me" target="_blank"><i class="fa-brands fa-discord"></i></a>
+            <a href="mailto:hajarzegharif5@gmail.com"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+    </footer>
+
+</div>
+
+<script>
+const sidebar    = document.getElementById('sidebar');
+const pageWrap   = document.getElementById('pageWrap');
+const mainHeader = document.getElementById('mainHeader');
+const toggleBtn  = document.getElementById('sidebarToggle');
+const themeCheck     = document.getElementById('themeCheck');
+const themeIcon      = document.getElementById('themeIcon');
+const themeLabel     = document.getElementById('themeLabel');
+const headerThemeBtn = document.getElementById('headerThemeBtn');
+const headerThemeIcon= document.getElementById('headerThemeIcon');
+const body           = document.getElementById('body');
+
+const moonSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+const sunSVG  = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+
+toggleBtn.addEventListener('click', () => {
+    sidebar.classList.toggle('collapsed');
+    pageWrap.classList.toggle('shifted');
+    mainHeader.classList.toggle('shifted');
+});
+
+function applyTheme(isLight) {
+    body.classList.toggle('light', isLight);
+    themeCheck.checked = isLight;
+    themeIcon.className = isLight ? 'fa-solid fa-moon sb-icon' : 'fa-solid fa-sun sb-icon';
+    themeLabel.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    document.getElementById('themeBtn').setAttribute('data-label', isLight ? 'Dark Mode' : 'Light Mode');
+    headerThemeBtn.innerHTML = isLight ? moonSVG : sunSVG;
+}
+
+themeCheck.addEventListener('change', () => applyTheme(themeCheck.checked));
+
+headerThemeBtn.addEventListener('click', () => applyTheme(!body.classList.contains('light')));
+
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = document.querySelectorAll("section[id]");
+    const navLinks = document.querySelectorAll(".link-ul a");
+    const sbItems  = document.querySelectorAll(".sb-item");
+
+    window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach(section => {
+            const top = section.offsetTop - 100;
+            if (window.scrollY >= top && window.scrollY < top + section.offsetHeight) {
+                current = section.getAttribute("id");
+            }
+        });
+        navLinks.forEach(link => {
+            link.classList.toggle("active", link.getAttribute("href") === `#${current}`);
+        });
+        sbItems.forEach(item => {
+            item.classList.toggle("active", item.getAttribute("href") === `#${current}`);
+        });
+    });
+});
+</script>
+
+</body>
+</html>
